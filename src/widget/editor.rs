@@ -11,7 +11,8 @@ use crate::modules::editor::EditorState;
 
 pub fn render_editor(frame: &mut Frame, area: Rect, editor: &EditorState, focused: bool) {
     let title = editor
-        .file_path
+        .file
+        .path
         .as_ref()
         .and_then(|p| p.file_name().map(|n| n.to_string_lossy().to_string()))
         .unwrap_or_else(|| "untitled".to_string());
@@ -31,7 +32,7 @@ pub fn render_editor(frame: &mut Frame, area: Rect, editor: &EditorState, focuse
         title_style,
     ))];
 
-    for (i, l) in editor.lines.iter().enumerate() {
+    for (i, l) in editor.file.lines.iter().enumerate() {
         let gutter = format!("{:>width$} ", i + 1, width = GUTTER_WIDTH);
         lines.push(Line::from(vec![
             Span::styled(gutter, Style::default().fg(Color::DarkGray)),
@@ -46,7 +47,7 @@ pub fn render_editor(frame: &mut Frame, area: Rect, editor: &EditorState, focuse
 
     if focused {
         let gutter_width = GUTTER_WIDTH as u16 + 1;
-        let col_pos = editor.lines[editor.cursor_line]
+        let col_pos = editor.file.lines[editor.cursor_line]
             .chars()
             .take(editor.cursor_col)
             .map(|c| c.width().unwrap_or(0))

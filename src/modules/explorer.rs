@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf};
 
-use crate::modules::editor::{EditorState, open_file_in_editor};
+use crate::modules::editor::EditorState;
 
 #[derive(Debug, Clone)]
 pub struct TreeNode {
@@ -110,7 +110,7 @@ impl ExplorerState {
         if entry.is_dir {
             self.toggle_dir(&entry.path);
         } else {
-            open_file_in_editor(&entry.path, editor);
+            editor.load_file(&entry.path);
         }
     }
 
