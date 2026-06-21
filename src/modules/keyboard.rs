@@ -1,28 +1,51 @@
-use crate::app::{App, Focus};
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+
+use crate::app::{App, Focus};
 
 const SAVE_MOD: KeyModifiers = KeyModifiers::CONTROL;
 
 pub fn handle_key_event(app: &mut App, key: KeyEvent) {
-    match (key.modifiers, key.code) {
-        (_, KeyCode::Esc) | (KeyModifiers::CONTROL, KeyCode::Char('c') | KeyCode::Char('C')) => {
-            tracing::debug!("quit");
-            app.running = false;
+    if matches!(
+        (key.modifiers, key.code),
+        (
+            KeyModifiers::CONTROL,
+            KeyCode::Char('c') | KeyCode::Char('C')
+        ) | (
+            KeyModifiers::CONTROL,
+            KeyCode::Char('q') | KeyCode::Char('Q')
+        )
+    ) {
+        tracing::debug!("quit");
+        app.running = false;
+        return;
+    }
+
+    if app.search.visible {
+        app.search.handle_key(key, &mut app.editor);
+        return;
+    }
+
+    if key.modifiers == KeyModifiers::CONTROL
+        && matches!(key.code, KeyCode::Char('f') | KeyCode::Char('F'))
+    {
+        tracing::debug!("open search");
+        app.search.toggle();
+        return;
+    }
+
+    if matches!(key.code, KeyCode::Tab | KeyCode::Char('\t')) {
+        app.focus = app.focus.toggle();
+        tracing::debug!("focus -> {:?}", app.focus);
+        return;
+    }
+
+    match app.focus {
+        Focus::Explorer => {
+            handle_explorer_key(app, key);
         }
-        (_, KeyCode::Tab) | (_, KeyCode::Char('\t')) => {
-            app.focus = app.focus.toggle();
-            tracing::debug!("focus -> {:?}", app.focus);
+        Focus::Editor => {
+            app.editor.handle_key(key, SAVE_MOD);
         }
-        _ => match app.focus {
-            Focus::Explorer => {
-                tracing::debug!("dispatch to explorer");
-                handle_explorer_key(app, key);
-            }
-            Focus::Editor => {
-                tracing::debug!("dispatch to editor, save_mod={:?}", SAVE_MOD);
-                app.editor.handle_key(key, SAVE_MOD);
-            }
-        },
     }
 }
 

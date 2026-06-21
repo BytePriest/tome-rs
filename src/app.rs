@@ -3,7 +3,9 @@ use crossterm::event::KeyEvent;
 use crate::modules::editor::EditorState;
 use crate::modules::explorer::ExplorerState;
 use crate::modules::keyboard::handle_key_event;
+use crate::modules::search::SearchState;
 
+//记录当前在左侧侧边栏还是右侧编辑区
 #[derive(Debug, Default)]
 pub enum Focus {
     #[default]
@@ -25,6 +27,7 @@ pub struct App {
     pub focus: Focus,
     pub explorer: ExplorerState,
     pub editor: EditorState,
+    pub search: SearchState,
 }
 
 impl App {
@@ -34,6 +37,7 @@ impl App {
             focus: Focus::Explorer,
             explorer: ExplorerState::new("."),
             editor: EditorState::new(),
+            search: SearchState::new(),
         }
     }
 

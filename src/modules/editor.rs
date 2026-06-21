@@ -9,6 +9,7 @@ pub struct EditorState {
     pub cursor_line: usize,
     pub cursor_col: usize,
     pub scroll: usize,
+    pub visible_lines: usize,
 }
 
 impl EditorState {
@@ -18,6 +19,7 @@ impl EditorState {
             cursor_line: 0,
             cursor_col: 0,
             scroll: 0,
+            visible_lines: 0,
         }
     }
 
