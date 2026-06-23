@@ -1,9 +1,9 @@
 use crossterm::event::KeyEvent;
 
-use crate::modules::editor::EditorState;
-use crate::modules::explorer::ExplorerState;
-use crate::modules::keyboard::handle_key_event;
-use crate::modules::search::SearchState;
+use crate::core::editor::EditorState;
+use crate::core::explorer::ExplorerState;
+use crate::core::keyboard::handle_key_event;
+use crate::core::search::SearchState;
 
 //记录当前在左侧侧边栏还是右侧编辑区
 #[derive(Debug, Default)]

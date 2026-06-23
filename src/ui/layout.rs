@@ -5,7 +5,7 @@ use ratatui::{
 
 use crate::app::App;
 use crate::app::Focus;
-use crate::widget;
+use crate::ui::{divider, editor, explorer, search};
 
 pub fn render(app: &mut App, frame: &mut Frame) {
     let area = frame.area();
@@ -26,16 +26,23 @@ pub fn render(app: &mut App, frame: &mut Frame) {
 
     let visible_lines = editor_content.height.saturating_sub(1) as usize;
     app.editor.visible_lines = visible_lines;
+    app.editor.available_cols = editor_content.width.saturating_sub(6) as usize;
+    tracing::trace!(
+        "layout: editor_area.width={} available_cols={} visible_lines={}",
+        editor_content.width,
+        app.editor.available_cols,
+        visible_lines,
+    );
     app.editor.adjust_scroll(visible_lines);
 
-    widget::explorer::render_explorer(
+    explorer::render_explorer(
         frame,
         explorer_area,
         &app.explorer,
         matches!(app.focus, Focus::Explorer),
     );
-    widget::divider::render_divider(frame, divider_area);
-    widget::editor::render_editor(
+    divider::render_divider(frame, divider_area);
+    editor::render_editor(
         frame,
         editor_content,
         &app.editor,
@@ -45,6 +52,6 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     );
 
     if let Some(area) = search_bar {
-        widget::search::render_search(frame, area, &app.search);
+        search::render_search(frame, area, &app.search);
     }
 }

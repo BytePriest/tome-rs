@@ -6,7 +6,7 @@ use ratatui::{
     widgets::Paragraph,
 };
 
-use crate::modules::explorer::ExplorerState;
+use crate::core::explorer::ExplorerState;
 
 pub fn render_explorer(frame: &mut Frame, area: Rect, explorer: &ExplorerState, _focused: bool) {
     let mut lines: Vec<Line> = Vec::new();

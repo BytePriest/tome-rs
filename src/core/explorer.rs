@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf};
 
-use crate::modules::editor::EditorState;
+use crate::core::editor::EditorState;
 
 #[derive(Debug, Clone)]
 pub struct TreeNode {
